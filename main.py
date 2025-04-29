@@ -28,6 +28,9 @@ for filename in os.listdir(input_folder):
         edges = cv.Canny(img, 100, 200)
 
         edges_dilated = cv.dilate(edges, kernel, iterations=1)
-        
-        cv.imwrite(output_path, edges_dilated)
+
+        # Invert black and white colors of the Canny output
+        edges_inverted = cv.bitwise_not(edges_dilated)
+
+        cv.imwrite(output_path, edges_inverted)
         print(f"Saved: {output_path}")

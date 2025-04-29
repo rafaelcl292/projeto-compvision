@@ -12,7 +12,17 @@ from transformers import ViTImageProcessor, ViTModel
 
 
 def embed_image(path, processor, model):
-    image = Image.open(path).convert("RGB")
+    # Abre a imagem
+    image = Image.open(path)
+    # Converte desenhos de Enzo e Marcelo para preto e branco antes de embeddar
+    # mantendo três canais para o modelo ViT
+    
+    image = image.convert("L")  # Converte para escala de cinza
+    image = image.point(lambda x: 255 if x > 200 else 0, mode='1')  # Binariza
+    image = image.convert("RGB")  # Converte para 3 canais para o ViT
+
+    image.show()
+
     inputs = processor(images=image, return_tensors="pt")
     outputs = model(**inputs)
     # Usa o token [CLS] como embedding
