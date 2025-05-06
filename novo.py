@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Script para gerar embeddings de imagens de desenho (Enzo e Marcelo) e comparar com imagens Canny.
-Calcula a similaridade de cossenos e indica qual desenho é mais similar para cada imagem.
+Script para gerar embeddings de imagens de desenho de múltiplos jogadores e comparar com imagens Canny.
+Calcula a similaridade de cossenos, indica o vencedor de cada desenho e quem obteve a maior pontuação.
 """
 import os
 import glob
@@ -21,8 +21,6 @@ def embed_image(path, processor, model):
     image = image.point(lambda x: 255 if x > 200 else 0, mode='1')  # Binariza
     image = image.convert("RGB")  # Converte para 3 canais para o ViT
 
-    image.show()
-
     inputs = processor(images=image, return_tensors="pt")
     outputs = model(**inputs)
     # Usa o token [CLS] como embedding
@@ -40,23 +38,32 @@ def cosine_similarity(vec1: np.ndarray, vec2: np.ndarray) -> float:
 
 
 def main():
-    enzo_dir = "enzo_desenho"
-    marcelo_dir = "marcelo_desenho"
-    canny_dir = "fotos_canny"
+    
+    print("Iniciando comparação de imagens...")
 
     # Carrega modelo e processador ViT
     processor = ViTImageProcessor.from_pretrained('google/vit-base-patch16-224-in21k')
     model = ViTModel.from_pretrained('google/vit-base-patch16-224-in21k')
 
-    # Lista arquivos de desenho de Enzo
-    enzo_files = sorted(f for f in os.listdir(enzo_dir)
-                        if os.path.isfile(os.path.join(enzo_dir, f)))
+    players_dir = "players"
+    canny_dir = "fotos_canny"
 
-    for filename in enzo_files:
+    # Lista jogadores
+    players = sorted(d for d in os.listdir(players_dir)
+                        if os.path.isdir(os.path.join(players_dir, d)))
+    # Inicializa contagem de vitórias
+    wins_count = {player: 0 for player in players}
+
+    # Obtém lista de desenhos a partir do primeiro jogador
+    if not players:
+        print("Nenhum jogador encontrado na pasta 'players'.")
+        return
+    
+    first_player_dir = os.path.join(players_dir, players[0])
+    drawing_files = sorted(f for f in os.listdir(first_player_dir) if os.path.isfile(os.path.join(first_player_dir, f)))
+
+    for filename in drawing_files:
         name, _ = os.path.splitext(filename)
-        enzo_path = os.path.join(enzo_dir, filename)
-        marcelo_path = os.path.join(marcelo_dir, filename)
-
         # Encontra arquivo Canny correspondente
         pattern = os.path.join(canny_dir, f"canny_{name}.*")
         canny_list = glob.glob(pattern)
@@ -64,30 +71,55 @@ def main():
         if not canny_list:
             print(f"Nenhuma imagem Canny encontrada para '{name}', pulando.")
             continue
-        
-        canny_path = canny_list[0]
 
-        # Gera embeddings
-        emb_enzo = embed_image(enzo_path, processor, model)
-        emb_marcelo = embed_image(marcelo_path, processor, model)
+        canny_path = canny_list[0]
         emb_canny = embed_image(canny_path, processor, model)
 
-        # Calcula similaridades
-        sim_enzo = cosine_similarity(emb_enzo, emb_canny)
-        sim_marcelo = cosine_similarity(emb_marcelo, emb_canny)
+        # Calcula similaridades para cada jogador
+        sim_scores = {}
+        for player in players:
+            player_path = os.path.join(players_dir, player, filename)
+            if not os.path.isfile(player_path):
+                print(f"Aviso: {player} não tem o desenho '{filename}', pulando.")
+                continue
+            emb = embed_image(player_path, processor, model)
+            sim = cosine_similarity(emb, emb_canny)
+            sim_scores[player] = sim
 
-        # Exibe resultados
+        if not sim_scores:
+            continue
+
+        # Exibe resultados individuais
         print(f"Imagem: {name}")
-        print(f"  Similaridade Enzo   : {sim_enzo:.4f}")
-        print(f"  Similaridade Marcelo: {sim_marcelo:.4f}")
-        if sim_enzo > sim_marcelo:
-            vencedor = "Desenho do Enzo"
-            sim_vencedor = sim_enzo
+        for player, sim in sim_scores.items():
+            print(f"  Similaridade {player: <10}: {sim:.4f}")
+
+        # Determina vencedor(es) para este desenho
+        max_sim = max(sim_scores.values())
+        winners = [p for p, s in sim_scores.items() if s == max_sim]
+        if len(winners) == 1:
+            winner = winners[0]
+            wins_count[winner] += 1
+            print(f"  => Vencedor: {winner} (similaridade: {max_sim:.4f})")
         else:
-            vencedor = "Desenho do Marcelo"
-            sim_vencedor = sim_marcelo
-        print(f"  => {vencedor} é mais similar à imagem Canny ({sim_vencedor:.4f})")
+            for w in winners:
+                wins_count[w] += 1
+            winners_str = ", ".join(winners)
+            print(f"  => Empate entre: {winners_str} (similaridade: {max_sim:.4f})")
         print()
+
+    # Exibe pontuação final
+    print("Pontuação final:")
+    for player, count in wins_count.items():
+        print(f"  {player: <10}: {count}")
+    # Determina campeão
+    max_wins = max(wins_count.values())
+    champions = [p for p, c in wins_count.items() if c == max_wins]
+    if len(champions) == 1:
+        print(f"Campeão: {champions[0]} com {max_wins} ponto(s)!")
+    else:
+        champs_str = " e ".join(champions)
+        print(f"Empate geral entre: {champs_str} com {max_wins} ponto(s) cada!")
 
 
 if __name__ == "__main__":
