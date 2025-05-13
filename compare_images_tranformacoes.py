@@ -14,17 +14,7 @@ from jinja2 import Template
 from PIL import Image
 from transformers import ViTImageProcessor, ViTModel
 
-
-def embed_image(path, processor, model):
-    """Gera o embedding de uma imagem usando o modelo ViT."""
-    image = Image.open(path)
-    image = image.convert("L")  # Converte para escala de cinza
-    image = image.point(lambda x: 255 if x > 200 else 0, mode="1")  # Binariza
-    image = image.convert("RGB")  # Converte para 3 canais para o ViT
-    inputs = processor(images=image, return_tensors="pt")
-    outputs = model(**inputs)
-    embedding = outputs.last_hidden_state[:, 0, :].detach().numpy().reshape(-1)
-    return embedding
+from novo import embed_image
 
 
 def cosine_similarity(vec1: np.ndarray, vec2: np.ndarray) -> float:

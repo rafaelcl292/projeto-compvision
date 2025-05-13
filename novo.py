@@ -3,8 +3,9 @@
 Script para gerar embeddings de imagens de desenho de múltiplos jogadores e comparar com imagens Canny.
 Calcula a similaridade de cossenos, indica o vencedor de cada desenho e quem obteve a maior pontuação.
 """
-import os
+
 import glob
+import os
 
 import numpy as np
 from PIL import Image
@@ -16,15 +17,21 @@ def embed_image(path, processor, model):
     image = Image.open(path)
     # Converte desenhos de Enzo e Marcelo para preto e branco antes de embeddar
     # mantendo três canais para o modelo ViT
-    
+
     image = image.convert("L")  # Converte para escala de cinza
-    image = image.point(lambda x: 255 if x > 200 else 0, mode='1')  # Binariza
+    image = image.point(lambda x: 255 if x > 200 else 0, mode="1")  # Binariza
     image = image.convert("RGB")  # Converte para 3 canais para o ViT
 
-    inputs = processor(images=image, return_tensors="pt")
-    outputs = model(**inputs)
-    # Usa o token [CLS] como embedding
-    embedding = outputs.last_hidden_state[:, 0, :].detach().numpy().reshape(-1)
+    # Gera embeddings para várias rotações e faz a média
+    angles = [0, 45, 90, 135, 180, 225, 270, 315]
+    embeddings = []
+    for angle in angles:
+        rotated = image.rotate(angle, expand=True)
+        inputs = processor(images=rotated, return_tensors="pt")
+        outputs = model(**inputs)
+        emb = outputs.last_hidden_state[:, 0, :].detach().numpy().reshape(-1)
+        embeddings.append(emb)
+    embedding = np.max(embeddings, axis=0)
     return embedding
 
 
@@ -38,19 +45,21 @@ def cosine_similarity(vec1: np.ndarray, vec2: np.ndarray) -> float:
 
 
 def main():
-    
     print("Iniciando comparação de imagens...")
 
     # Carrega modelo e processador ViT
-    processor = ViTImageProcessor.from_pretrained('google/vit-base-patch16-224-in21k')
-    model = ViTModel.from_pretrained('google/vit-base-patch16-224-in21k')
+    processor = ViTImageProcessor.from_pretrained("google/vit-base-patch16-224-in21k")
+    model = ViTModel.from_pretrained("google/vit-base-patch16-224-in21k")
 
     players_dir = "players"
     canny_dir = "fotos_canny"
 
     # Lista jogadores
-    players = sorted(d for d in os.listdir(players_dir)
-                        if os.path.isdir(os.path.join(players_dir, d)))
+    players = sorted(
+        d
+        for d in os.listdir(players_dir)
+        if os.path.isdir(os.path.join(players_dir, d))
+    )
     # Inicializa contagem de vitórias
     wins_count = {player: 0 for player in players}
 
@@ -58,9 +67,13 @@ def main():
     if not players:
         print("Nenhum jogador encontrado na pasta 'players'.")
         return
-    
+
     first_player_dir = os.path.join(players_dir, players[0])
-    drawing_files = sorted(f for f in os.listdir(first_player_dir) if os.path.isfile(os.path.join(first_player_dir, f)))
+    drawing_files = sorted(
+        f
+        for f in os.listdir(first_player_dir)
+        if os.path.isfile(os.path.join(first_player_dir, f))
+    )
 
     for filename in drawing_files:
         name, _ = os.path.splitext(filename)
