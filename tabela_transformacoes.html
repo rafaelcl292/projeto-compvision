@@ -1,0 +1,202 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Tabela de Comparação de Transformações com Imagens Canny</title>
+    <style>
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid black; padding: 8px; text-align: center; }
+        img { width: 100px; height: auto; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <h1>Tabela de Comparação de Transformações com Imagens Canny (Bruno)</h1>
+    <table>
+        <tr>
+            <th>Desenho</th>
+            
+            <th>Original</th>
+            
+            <th>75% Tamanho</th>
+            
+            <th>150% Tamanho</th>
+            
+            <th>45° Rotação</th>
+            
+            <th>90° Rotação</th>
+            
+            <th>Dilatação 1x</th>
+            
+        </tr>
+        
+        <tr>
+            <td>brasil</td>
+            
+            <td>0.6865</td>
+            
+            <td>0.6830</td>
+            
+            <td>0.6856</td>
+            
+            <td>0.7125</td>
+            
+            <td>0.6217</td>
+            
+            <td>0.6904</td>
+            
+        </tr>
+        <tr>
+            <td><img src="fotos_canny/canny_brasil.png" alt="Canny brasil"></td>
+            
+            <td><img src="transformed_images/brasil_original.png" alt="original - brasil"></td>
+            
+            <td><img src="transformed_images/brasil_75percent.png" alt="75percent - brasil"></td>
+            
+            <td><img src="transformed_images/brasil_150percent.png" alt="150percent - brasil"></td>
+            
+            <td><img src="transformed_images/brasil_45rotate.png" alt="45rotate - brasil"></td>
+            
+            <td><img src="transformed_images/brasil_90rotate.png" alt="90rotate - brasil"></td>
+            
+            <td><img src="transformed_images/brasil_dilate.png" alt="dilate - brasil"></td>
+            
+        </tr>
+        
+        <tr>
+            <td>estrela</td>
+            
+            <td>0.5228</td>
+            
+            <td>0.5241</td>
+            
+            <td>0.5237</td>
+            
+            <td>0.5744</td>
+            
+            <td>0.5525</td>
+            
+            <td>0.5365</td>
+            
+        </tr>
+        <tr>
+            <td><img src="fotos_canny/canny_estrela.png" alt="Canny estrela"></td>
+            
+            <td><img src="transformed_images/estrela_original.png" alt="original - estrela"></td>
+            
+            <td><img src="transformed_images/estrela_75percent.png" alt="75percent - estrela"></td>
+            
+            <td><img src="transformed_images/estrela_150percent.png" alt="150percent - estrela"></td>
+            
+            <td><img src="transformed_images/estrela_45rotate.png" alt="45rotate - estrela"></td>
+            
+            <td><img src="transformed_images/estrela_90rotate.png" alt="90rotate - estrela"></td>
+            
+            <td><img src="transformed_images/estrela_dilate.png" alt="dilate - estrela"></td>
+            
+        </tr>
+        
+        <tr>
+            <td>github</td>
+            
+            <td>0.5942</td>
+            
+            <td>0.5977</td>
+            
+            <td>0.6033</td>
+            
+            <td>0.3288</td>
+            
+            <td>0.6132</td>
+            
+            <td>0.6547</td>
+            
+        </tr>
+        <tr>
+            <td><img src="fotos_canny/canny_github.png" alt="Canny github"></td>
+            
+            <td><img src="transformed_images/github_original.png" alt="original - github"></td>
+            
+            <td><img src="transformed_images/github_75percent.png" alt="75percent - github"></td>
+            
+            <td><img src="transformed_images/github_150percent.png" alt="150percent - github"></td>
+            
+            <td><img src="transformed_images/github_45rotate.png" alt="45rotate - github"></td>
+            
+            <td><img src="transformed_images/github_90rotate.png" alt="90rotate - github"></td>
+            
+            <td><img src="transformed_images/github_dilate.png" alt="dilate - github"></td>
+            
+        </tr>
+        
+        <tr>
+            <td>mack</td>
+            
+            <td>0.3428</td>
+            
+            <td>0.3487</td>
+            
+            <td>0.3417</td>
+            
+            <td>0.3920</td>
+            
+            <td>0.4242</td>
+            
+            <td>0.3712</td>
+            
+        </tr>
+        <tr>
+            <td><img src="fotos_canny/canny_mack.png" alt="Canny mack"></td>
+            
+            <td><img src="transformed_images/mack_original.png" alt="original - mack"></td>
+            
+            <td><img src="transformed_images/mack_75percent.png" alt="75percent - mack"></td>
+            
+            <td><img src="transformed_images/mack_150percent.png" alt="150percent - mack"></td>
+            
+            <td><img src="transformed_images/mack_45rotate.png" alt="45rotate - mack"></td>
+            
+            <td><img src="transformed_images/mack_90rotate.png" alt="90rotate - mack"></td>
+            
+            <td><img src="transformed_images/mack_dilate.png" alt="dilate - mack"></td>
+            
+        </tr>
+        
+        <tr>
+            <td>raposa</td>
+            
+            <td>0.4122</td>
+            
+            <td>0.4307</td>
+            
+            <td>0.4187</td>
+            
+            <td>0.2342</td>
+            
+            <td>0.2644</td>
+            
+            <td>0.4886</td>
+            
+        </tr>
+        <tr>
+            <td><img src="fotos_canny/canny_raposa.png" alt="Canny raposa"></td>
+            
+            <td><img src="transformed_images/raposa_original.png" alt="original - raposa"></td>
+            
+            <td><img src="transformed_images/raposa_75percent.png" alt="75percent - raposa"></td>
+            
+            <td><img src="transformed_images/raposa_150percent.png" alt="150percent - raposa"></td>
+            
+            <td><img src="transformed_images/raposa_45rotate.png" alt="45rotate - raposa"></td>
+            
+            <td><img src="transformed_images/raposa_90rotate.png" alt="90rotate - raposa"></td>
+            
+            <td><img src="transformed_images/raposa_dilate.png" alt="dilate - raposa"></td>
+            
+        </tr>
+        
+    </table>
+</body>
+</html>
+    
