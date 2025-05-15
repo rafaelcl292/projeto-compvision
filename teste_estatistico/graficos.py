@@ -5,11 +5,16 @@ import seaborn as sns
 with open('transformation_results.txt', 'r') as file:
     data = [float(line.strip()) for line in file if line.strip()]
 
+# Read the data from the file
+with open('transformation_results2.txt', 'r') as file:
+    data2 = [float(line.strip()) for line in file if line.strip()]
+
 # Create figure with specific size
 plt.figure(figsize=(12, 6))
 
 # Create the distribution plot
-sns.histplot(data=data, bins=100)
+sns.histplot(data=data, bins=20)
+sns.histplot(data=data2, bins=20)
 
 # Set x-axis limits from 0 to 1
 plt.xlim(0, 1)
