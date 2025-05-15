@@ -9,6 +9,7 @@ dependencies = [
     "matplotlib>=3.10.1",
     "openai>=1.76.0",
     "opencv-python>=4.11.0.86",
+    "seaborn>=0.13.2",
     "torchvision>=0.22.0",
     "transformers>=4.51.3",
 ]

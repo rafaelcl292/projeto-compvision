@@ -1,10 +1,6 @@
 from transformers import ViTImageProcessor, ViTModel
 from PIL import Image
-import requests
 import numpy as np
-
-# url = 'http://images.cocodataset.org/val2017/000000039769.jpg'
-# url2 = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHqQAhr87cf9o3nfPj42O4loQ1oz8FBJIfJkYckRg2gjzwwu4BT3lqa4NVTDQpzIn7LFRhLPl9LJFL6qp_9i_f-A"
 
 url = "fotos/brasil.png"
 url2 = "fotos_canny/canny_brasil.png"
