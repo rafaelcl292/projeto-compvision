@@ -29,10 +29,6 @@ def main():
     original_img = cv2.imread(original_img_path)
     canny_img = cv2.imread(canny_img_path)
     
-    if original_img is None:
-        raise ValueError(f"Could not load original image from {original_img_path}")
-    if canny_img is None:
-        raise ValueError(f"Could not load canny image from {canny_img_path}")
     
     processor = ViTImageProcessor.from_pretrained('google/vit-base-patch16-224-in21k')
     model = ViTModel.from_pretrained('google/vit-base-patch16-224-in21k')
@@ -40,35 +36,41 @@ def main():
     canny_embedding = get_image_embedding(canny_img, processor, model)
     
     results = []
+
+    kernel = np.ones((3, 3), np.uint8)
     
-    for degree in range(0, 361, 1):
-        
-        for resize_percent in range(50, 151, 10):
+    # Test all combinations of rotation, resize and dilation
+    for degree in range(0, 361, 18):
 
-            height, width = original_img.shape[:2]
-            
-            # Calculate new dimensions based on resize_percent
-            new_width = int(width * resize_percent / 100)
-            new_height = int(height * resize_percent / 100)
-            
-            # Resize image using OpenCV
-            resized = cv2.resize(original_img, (new_width, new_height), interpolation=cv2.INTER_LANCZOS4)
-            
-            # Apply rotation using OpenCV
-            center = (new_width // 2, new_height // 2)
+        for resize_percent in range(50, 151, 5):
 
-            rotation_matrix = cv2.getRotationMatrix2D(center, degree, 1.0)
+            for dilation_iter in range(1, 4):
 
-            rotated = cv2.warpAffine(resized, rotation_matrix, (new_width, new_height))
-            
-            # Get embedding for transformed image
-            transformed_embedding = get_image_embedding(rotated, processor, model)
-            
-            # Calculate similarity
-            similarity = calculate_cosine_similarity(canny_embedding, transformed_embedding)
-            print(f"Degree: {degree}, Resize: {resize_percent}%, Similarity: {similarity:.4f}")
-            
-            results.append(f"{similarity:.4f}")
+                height, width = original_img.shape[:2]
+                
+                # Calculate new dimensions based on resize_percent
+                new_width = int(width * resize_percent / 100)
+                new_height = int(height * resize_percent / 100)
+                
+                # Resize image using OpenCV
+                resized = cv2.resize(original_img, (new_width, new_height), interpolation=cv2.INTER_LANCZOS4)
+                
+                # Apply rotation using OpenCV
+                center = (new_width // 2, new_height // 2)
+                rotation_matrix = cv2.getRotationMatrix2D(center, degree, 1.0)
+                rotated = cv2.warpAffine(resized, rotation_matrix, (new_width, new_height))
+                
+                # Apply dilation
+                dilated = cv2.dilate(rotated, kernel, iterations=dilation_iter)
+                
+                # Get embedding for transformed image
+                transformed_embedding = get_image_embedding(dilated, processor, model)
+                
+                # Calculate similarity
+                similarity = calculate_cosine_similarity(canny_embedding, transformed_embedding)
+                print(f"{similarity:.4f}")
+                
+                results.append(f'{similarity}')
     
     output_path = os.path.join(current_dir, "transformation_results2.txt")
     with open(output_path, "w") as f:
