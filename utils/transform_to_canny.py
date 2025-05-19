@@ -2,8 +2,8 @@ import os
 import cv2 as cv
 import numpy as np
 
-input_folder = 'fotos'
-output_folder = 'fotos_canny'
+input_folder = '../fotos'
+output_folder = '../fotos_canny'
 
 os.makedirs(output_folder, exist_ok=True)
 
