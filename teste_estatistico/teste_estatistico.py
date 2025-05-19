@@ -42,6 +42,7 @@ def main():
     results = []
     
     for degree in range(0, 361, 1):
+        
         for resize_percent in range(50, 151, 10):
 
             height, width = original_img.shape[:2]
