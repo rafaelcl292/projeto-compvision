@@ -56,7 +56,7 @@ def analyze_data(files, title_prefix):
         try:
             with open(file, 'r') as f:
                 data = [float(line.strip()) for line in f if line.strip()]
-                name = os.path.basename(file).replace('transformation_results_', '').replace('_estrela.txt', '').replace('_mack.txt', '')
+                name = os.path.basename(file).replace('transformation_results_', '').replace('_estrela.txt', '').replace('_mack.txt', '').replace('_raposa.txt', '')
                 data_dict[name] = data
         except FileNotFoundError:
             print(f"ERRO: Arquivo não encontrado: {file}")
@@ -68,9 +68,6 @@ def analyze_data(files, title_prefix):
     if not data_dict:
         print(f"ERRO: Nenhum dado válido encontrado para {title_prefix}")
         return
-
-    # Print detailed statistics
-    # print_statistics(data_dict, title_prefix)
 
     # Create a DataFrame for t-test results
     combinations = list(itertools.combinations(data_dict.keys(), 2))
@@ -89,7 +86,7 @@ def analyze_data(files, title_prefix):
     results_df = pd.DataFrame(results)
 
     # Create figure with subplots
-    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 12))
+    fig, (ax1, ax2, ax3) = plt.subplots(3, 1, figsize=(12, 18))
 
     # Plot 1: Box plot of all distributions
     data_to_plot = [data_dict[name] for name in data_dict.keys()]
@@ -106,6 +103,17 @@ def analyze_data(files, title_prefix):
     ax2.set_ylabel('P-valor (%)', fontsize=12)
     ax2.legend()
     ax2.grid(True, alpha=0.3)
+
+    # Plot 3: Distribution plot
+    for name, data in data_dict.items():
+        sns.histplot(data=data, bins=50, label=name, alpha=0.5, ax=ax3)
+    
+    ax3.set_title(f'Distribuição dos Resultados Estatísticos - {title_prefix}', fontsize=14, pad=20)
+    ax3.set_xlabel('Valores', fontsize=12)
+    ax3.set_ylabel('Frequência', fontsize=12)
+    ax3.legend(title='Datasets')
+    ax3.grid(True, alpha=0.3)
+    ax3.set_xlim(-1, 1)
 
     # Adjust layout
     plt.tight_layout()
