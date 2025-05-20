@@ -24,6 +24,13 @@ mack_files = [
     os.path.join(RESULTS_DIR, 'transformation_results_bruno_mack.txt')
 ]
 
+raposa_files = [
+    os.path.join(RESULTS_DIR, 'transformation_results_enzo_raposa.txt'),
+    os.path.join(RESULTS_DIR, 'transformation_results_marcelo_raposa.txt'),
+    os.path.join(RESULTS_DIR, 'transformation_results_rafael_raposa.txt'),
+    os.path.join(RESULTS_DIR, 'transformation_results_bruno_raposa.txt')
+]
+
 def print_statistics(data_dict, title_prefix):
     """Print detailed statistics for each player's data"""
     print(f"\n{'='*80}")
@@ -135,6 +142,7 @@ def main():
     # Analyze both star and mack data
     analyze_data(star_files, "Estrela")
     analyze_data(mack_files, "Mack")
+    analyze_data(raposa_files, "Raposa")
     
     print("\nAnálise estatística concluída!")
 

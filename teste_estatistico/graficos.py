@@ -1,23 +1,33 @@
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# Read the data from the file
-# with open('transformation_results.txt', 'r') as file:
-#     data = [float(line.strip()) for line in file if line.strip()]
+# Read the data from the files
+with open('/Users/marcelomarchetto/Desktop/viscomproj/teste_estatistico/transformation_results/transformation_results_marcelo_raposa.txt', 'r') as file:
+    data = [float(line.strip()) for line in file if line.strip()]
 
-# Read the data from the file
-with open('transformation_results2.txt', 'r') as file:
+with open('/Users/marcelomarchetto/Desktop/viscomproj/teste_estatistico/transformation_results/transformation_results_enzo_raposa.txt', 'r') as file:
     data2 = [float(line.strip()) for line in file if line.strip()]
+
+with open('/Users/marcelomarchetto/Desktop/viscomproj/teste_estatistico/transformation_results/transformation_results_bruno_raposa.txt', 'r') as file:
+    data3 = [float(line.strip()) for line in file if line.strip()]
+
+with open('/Users/marcelomarchetto/Desktop/viscomproj/teste_estatistico/transformation_results/transformation_results_rafael_raposa.txt', 'r') as file:
+    data4 = [float(line.strip()) for line in file if line.strip()]
 
 # Create figure with specific size
 plt.figure(figsize=(12, 6))
 
-# Create the distribution plot
-# sns.histplot(data=data, bins=20)
-sns.histplot(data=data2, bins=20)
+# Create the distribution plots with distinct labels and slight transparency for overlap visibility
+sns.histplot(data=data, bins=50, label='Marcelo', alpha=0.5)
+sns.histplot(data=data2, bins=50, label='Enzo', alpha=0.5)
+sns.histplot(data=data3, bins=50, label='Bruno', alpha=0.5)
+sns.histplot(data=data4, bins=50, label='Rafael', alpha=0.5)
 
-# Set x-axis limits from 0 to 1
-plt.xlim(-1, 1)
+# Set x-axis limits
+plt.xlim(-0.2, 0.6)
+
+# Add legend
+plt.legend(title='Datasets')
 
 # Customize the plot
 plt.title('Distribuição dos Resultados Estatísticos', fontsize=14, pad=20)
