@@ -50,6 +50,7 @@ def ensure_results_directory():
     results_dir = os.path.join(current_dir, "transformation_results")
     if not os.path.exists(results_dir):
         os.makedirs(results_dir)
+    
     return results_dir
 
 
@@ -119,15 +120,14 @@ def process_single_image(player_name, image_file, processor, model):
 
                 results.append(f"{similarity}")
 
-    # Save results for this image in the transformation_results directory
-    results_dir = ensure_results_directory()
-    output_filename = (
-        f"transformation_results_{player_name}_{os.path.splitext(image_file)[0]}.txt"
-    )
-    output_path = os.path.join(results_dir, output_filename)
-    with open(output_path, "w") as f:
+    # Save results for this image in the player-specific transformation_results directory
+    
+    output_filename = f"transformation_results_{os.path.splitext(image_file)[0]}.txt"
+    
+    with open(f'./transformation_results/{image_file.split('.')[0]}/{output_filename}', "w") as f:
         f.write("\n".join(results))
-    print(f"\nResults saved to {output_filename} in transformation_results directory")
+
+    print(f"\nResults saved to {player_name}/{output_filename} in transformation_results directory")
 
 
 def main():
