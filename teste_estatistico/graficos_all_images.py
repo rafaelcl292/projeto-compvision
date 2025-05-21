@@ -10,26 +10,19 @@ import os
 RESULTS_DIR = './transformation_results'
 
 # List of all transformation result files for both star and mack
-star_files = [
-    os.path.join(RESULTS_DIR, 'transformation_results_enzo_estrela.txt'),
-    os.path.join(RESULTS_DIR, 'transformation_results_marcelo_estrela.txt'),
-    os.path.join(RESULTS_DIR, 'transformation_results_rafael_estrela.txt'),
-    os.path.join(RESULTS_DIR, 'transformation_results_bruno_estrela.txt')
-]
+RESULTS_DIR = os.path.join('transformation_results')
 
-mack_files = [
-    os.path.join(RESULTS_DIR, 'transformation_results_enzo_mack.txt'),
-    os.path.join(RESULTS_DIR, 'transformation_results_marcelo_mack.txt'),
-    os.path.join(RESULTS_DIR, 'transformation_results_rafael_mack.txt'),
-    os.path.join(RESULTS_DIR, 'transformation_results_bruno_mack.txt')
-]
+# Define subdirectories for each dataset
+STAR_DIR = os.path.join(RESULTS_DIR, 'estrela')
+MACK_DIR = os.path.join(RESULTS_DIR, 'mack')
+RAPOSA_DIR = os.path.join(RESULTS_DIR, 'raposa')
 
-raposa_files = [
-    os.path.join(RESULTS_DIR, 'transformation_results_enzo_raposa.txt'),
-    os.path.join(RESULTS_DIR, 'transformation_results_marcelo_raposa.txt'),
-    os.path.join(RESULTS_DIR, 'transformation_results_rafael_raposa.txt'),
-    os.path.join(RESULTS_DIR, 'transformation_results_bruno_raposa.txt')
-]
+# List of players
+PLAYERS = ['enzo', 'marcelo', 'rafael', 'bruno']
+
+# Generate file paths for each dataset
+star_files = [os.path.join(STAR_DIR, f'transformation_results_{player}_estrela.txt') for player in PLAYERS]
+mack_files = [os.path.join(MACK_DIR, f'transformation_results_{player}_mack.txt') for player in PLAYERS]
 
 def print_statistics(data_dict, title_prefix):
     """Print detailed statistics for each player's data"""
@@ -149,8 +142,8 @@ def main():
     
     # Analyze both star and mack data
     analyze_data(star_files, "Estrela")
-    analyze_data(mack_files, "Mack")
-    analyze_data(raposa_files, "Raposa")
+    # analyze_data(mack_files, "Mack")
+    # analyze_data(raposa_files, "Raposa")
     
     print("\nAnálise estatística concluída!")
 
