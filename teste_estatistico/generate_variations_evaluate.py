@@ -149,6 +149,7 @@ def main():
         print("\nAvailable images:")
         for idx, (player_name, image_file) in enumerate(available_images, 1):
             print(f"{idx}. {player_name}/{image_file}")
+            print("-------------------------------")
         print("0. Exit")
 
         try:
