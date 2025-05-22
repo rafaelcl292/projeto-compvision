@@ -122,7 +122,7 @@ def process_single_image(player_name, image_file, processor, model):
 
     # Save results for this image in the player-specific transformation_results directory
     
-    output_filename = f"transformation_results_{os.path.splitext(image_file)[0]}.txt"
+    output_filename = f"transformation_results_{player_name}_{os.path.splitext(image_file)[0]}.txt"
     
     with open(f'./transformation_results/{image_file.split('.')[0]}/{output_filename}', "w") as f:
         f.write("\n".join(results))
@@ -147,9 +147,11 @@ def main():
             break
 
         print("\nAvailable images:")
+
         for idx, (player_name, image_file) in enumerate(available_images, 1):
             print(f"{idx}. {player_name}/{image_file}")
             print("-------------------------------")
+
         print("0. Exit")
 
         try:

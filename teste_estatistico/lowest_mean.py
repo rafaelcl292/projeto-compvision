@@ -8,7 +8,7 @@ def read_transformation_results(file_path):
     return values
 
 # Directory containing the transformation results
-results_dir = 'transformation_results/mack'
+results_dir = 'transformation_results/raposa'
 
 # Get all result files
 result_files = [f for f in os.listdir(results_dir) if f.endswith('.txt')]
@@ -19,7 +19,7 @@ for file_name in result_files:
     file_path = os.path.join(results_dir, file_name)
     values = read_transformation_results(file_path)
     mean_value = np.mean(values)
-    player_name = file_name.replace('transformation_results_', '').replace('_mack.txt', '')
+    player_name = file_name.replace('transformation_results_', '').replace('_raposa.txt', '')
     player_means[player_name] = mean_value
     print(f"\nPlayer: {player_name}")
     print(f"Number of values: {len(values)}")
