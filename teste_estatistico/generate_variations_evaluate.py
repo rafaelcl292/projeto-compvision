@@ -83,7 +83,7 @@ def process_single_image(player_name, image_file, processor, model):
     kernel = np.ones((3, 3), np.uint8)
 
     # Test all combinations of rotation, resize and dilation
-    for degree in range(0, 361, 360):
+    for degree in range(0, 361, 18):
         for resize_percent in range(50, 151, 5):
             for dilation_iter in range(1, 4):
                 height, width = original_img.shape[:2]
