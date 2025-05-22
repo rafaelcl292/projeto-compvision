@@ -83,7 +83,7 @@ def process_single_image(player_name, image_file, processor, model):
     kernel = np.ones((3, 3), np.uint8)
 
     # Test all combinations of rotation, resize and dilation
-    for degree in range(0, 361, 18):
+    for degree in range(0, 361, 360):
         for resize_percent in range(50, 151, 5):
             for dilation_iter in range(1, 4):
                 height, width = original_img.shape[:2]
@@ -122,7 +122,7 @@ def process_single_image(player_name, image_file, processor, model):
 
     # Save results for this image in the player-specific transformation_results directory
     
-    output_filename = f"transformation_results_{os.path.splitext(image_file)[0]}.txt"
+    output_filename = f"transformation_results_{player_name}_{os.path.splitext(image_file)[0]}.txt"
     
     with open(f'./transformation_results/{image_file.split('.')[0]}/{output_filename}', "w") as f:
         f.write("\n".join(results))
@@ -147,9 +147,11 @@ def main():
             break
 
         print("\nAvailable images:")
+
         for idx, (player_name, image_file) in enumerate(available_images, 1):
             print(f"{idx}. {player_name}/{image_file}")
             print("-------------------------------")
+
         print("0. Exit")
 
         try:
