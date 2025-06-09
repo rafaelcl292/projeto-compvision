@@ -29,8 +29,8 @@ PLAYERS = ['enzo', 'marcelo', 'rafael', 'bruno']
 
 # Generate file paths for each dataset
 star_files = [os.path.join(STAR_DIR, f'transformation_results_{player}_estrela.txt') for player in PLAYERS]
-mack_files = [os.path.join(STAR_DIR, f'transformation_results_{player}_mack.txt') for player in PLAYERS]
-raposa_files = [os.path.join(STAR_DIR, f'transformation_results_{player}_raposa.txt') for player in PLAYERS]
+mack_files = [os.path.join(MACK_DIR, f'transformation_results_{player}_mack.txt') for player in PLAYERS]
+raposa_files = [os.path.join(RAPOSA_DIR, f'transformation_results_{player}_raposa.txt') for player in PLAYERS]
 cavalo_files = [os.path.join(CAVALO_DIR, f'transformation_results_{player}_cavalo.txt') for player in PLAYERS]
 gato_files = [os.path.join(GATO_DIR, f'transformation_results_{player}_gato.txt') for player in PLAYERS]
 linus_files = [os.path.join(LINUS_DIR, f'transformation_results_{player}_linus.txt') for player in PLAYERS]
@@ -114,6 +114,12 @@ def analyze_data(files, title_prefix):
     for name, data in data_dict.items():
         sns.histplot(data=data, bins=50, label=name, alpha=0.5, ax=ax3)
     
+    
+    with open(f'base_case/transformation_results/similarities_canny_{title_prefix.lower()}.txt', 'r') as f:
+        data = [float(line.strip()) for line in f if line.strip()]
+        sns.histplot(data=data, bins=10, label='Base case', alpha=0.5, ax=ax3)
+    
+
     ax3.set_title(f'Distribuição dos Resultados Estatísticos - {title_prefix}', fontsize=14, pad=20)
     ax3.set_xlabel('Valores', fontsize=12)
     ax3.set_ylabel('Frequência', fontsize=12)
@@ -161,7 +167,7 @@ def main():
     analyze_data(gato_files, "Gato")
     analyze_data(linus_files, "Linus")
     analyze_data(nike_files, "Nike")
-    analyze_data(luminaria_files, "Luminária")
+    analyze_data(luminaria_files, "Luminaria")
     
     print("\nAnálise estatística concluída!")
 
