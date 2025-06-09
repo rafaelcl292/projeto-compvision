@@ -5,23 +5,14 @@ import seaborn as sns
 with open('/Users/marcelomarchetto/Desktop/viscomproj/teste_estatistico/transformation_results/linus/transformation_results_linus.txt', 'r') as file:
     data = [float(line.strip()) for line in file if line.strip()]
 
-# with open('/Users/marcelomarchetto/Desktop/viscomproj/teste_estatistico/transformation_results/transformation_results_enzo_raposa.txt', 'r') as file:
-#     data2 = [float(line.strip()) for line in file if line.strip()]
-
-# with open('/Users/marcelomarchetto/Desktop/viscomproj/teste_estatistico/transformation_results/transformation_results_bruno_raposa.txt', 'r') as file:
-#     data3 = [float(line.strip()) for line in file if line.strip()]
-
-# with open('/Users/marcelomarchetto/Desktop/viscomproj/teste_estatistico/transformation_results/transformation_results_rafael_raposa.txt', 'r') as file:
-#     data4 = [float(line.strip()) for line in file if line.strip()]
+with open('/Users/marcelomarchetto/Desktop/viscomproj/teste_estatistico/transformation_results/transformation_results_enzo_raposa.txt', 'r') as file:
+    data2 = [float(line.strip()) for line in file if line.strip()]
 
 # Create figure with specific size
 plt.figure(figsize=(12, 6))
 
 # Create the distribution plots with distinct labels and slight transparency for overlap visibility
 sns.histplot(data=data, bins=100, label='Marcelo', alpha=0.5)
-# sns.histplot(data=data2, bins=50, label='Enzo', alpha=0.5)
-# sns.histplot(data=data3, bins=50, label='Bruno', alpha=0.5)
-# sns.histplot(data=data4, bins=50, label='Rafael', alpha=0.5)
 
 # Set x-axis limits
 plt.xlim(-1, 1)

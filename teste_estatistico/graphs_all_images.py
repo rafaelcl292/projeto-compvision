@@ -16,13 +16,26 @@ RESULTS_DIR = os.path.join('transformation_results')
 STAR_DIR = os.path.join(RESULTS_DIR, 'estrela')
 MACK_DIR = os.path.join(RESULTS_DIR, 'mack')
 RAPOSA_DIR = os.path.join(RESULTS_DIR, 'raposa')
+# Define subdirectories for each dataset
+
+CAVALO_DIR = os.path.join(RESULTS_DIR, 'cavalo')
+GATO_DIR = os.path.join(RESULTS_DIR, 'gato')
+LINUS_DIR = os.path.join(RESULTS_DIR, 'linus')
+LUMINARIA_DIR = os.path.join(RESULTS_DIR, 'luminaria')
+NIKE_DIR = os.path.join(RESULTS_DIR, 'nike')
 
 # List of players
 PLAYERS = ['enzo', 'marcelo', 'rafael', 'bruno']
 
 # Generate file paths for each dataset
 star_files = [os.path.join(STAR_DIR, f'transformation_results_{player}_estrela.txt') for player in PLAYERS]
-mack_files = [os.path.join(MACK_DIR, f'transformation_results_{player}_mack.txt') for player in PLAYERS]
+mack_files = [os.path.join(STAR_DIR, f'transformation_results_{player}_mack.txt') for player in PLAYERS]
+raposa_files = [os.path.join(STAR_DIR, f'transformation_results_{player}_raposa.txt') for player in PLAYERS]
+cavalo_files = [os.path.join(CAVALO_DIR, f'transformation_results_{player}_cavalo.txt') for player in PLAYERS]
+gato_files = [os.path.join(GATO_DIR, f'transformation_results_{player}_gato.txt') for player in PLAYERS]
+linus_files = [os.path.join(LINUS_DIR, f'transformation_results_{player}_linus.txt') for player in PLAYERS]
+luminaria_files = [os.path.join(LUMINARIA_DIR, f'transformation_results_{player}_luminaria.txt') for player in PLAYERS]
+nike_files = [os.path.join(NIKE_DIR, f'transformation_results_{player}_nike.txt') for player in PLAYERS]
 
 def print_statistics(data_dict, title_prefix):
     """Print detailed statistics for each player's data"""
@@ -49,7 +62,7 @@ def analyze_data(files, title_prefix):
         try:
             with open(file, 'r') as f:
                 data = [float(line.strip()) for line in f if line.strip()]
-                name = os.path.basename(file).replace('transformation_results_', '').replace('_estrela.txt', '').replace('_mack.txt', '').replace('_raposa.txt', '')
+                name = os.path.basename(file).replace('transformation_results_', '').split('_')[0]
                 data_dict[name] = data
         except FileNotFoundError:
             print(f"ERRO: Arquivo não encontrado: {file}")
@@ -142,8 +155,13 @@ def main():
     
     # Analyze both star and mack data
     analyze_data(star_files, "Estrela")
-    # analyze_data(mack_files, "Mack")
-    # analyze_data(raposa_files, "Raposa")
+    analyze_data(mack_files, "Mack")
+    analyze_data(raposa_files, "Raposa")
+    analyze_data(cavalo_files, "Cavalo")
+    analyze_data(gato_files, "Gato")
+    analyze_data(linus_files, "Linus")
+    analyze_data(nike_files, "Nike")
+    analyze_data(luminaria_files, "Luminária")
     
     print("\nAnálise estatística concluída!")
 
