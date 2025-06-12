@@ -44,45 +44,123 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 uv sync
 ```
 
-## 📁 Estrutura do Projeto
-
-```
-.
-├── fotos/                  # Diretório de imagens originais
-├── fotos_canny/           # Imagens processadas com algoritmo de Canny
-├── players/               # Diretório de imagens de jogadores
-├── tabelas_comparacoes/   # Resultados de comparações
-├── teste_estatistico/     # Análises estatísticas
-│   ├── generate_variations_evaluate.py  # Script principal de geração e avaliação
-│   └── transformation_results/          # Resultados das transformações e gráficos
-├── utils/                 # Utilitários e scripts de processamento
-│   ├── transform_to_canny.py    # Script de transformação Canny
-│   └── base_comparisson.py      # Script de comparação base
-└── pyproject.toml         # Configuração do projeto e dependências
-```
-
 ## 🎯 Principais Componentes
 
-### Processamento de Imagens
+### Geração e Avaliação de Variações (teste_estatistico/generate_variations_evaluate.py)
 
--   Transformação de imagens para escala de cinza
--   Detecção de bordas usando algoritmo de Canny
--   Dilatação de bordas para melhor visualização
--   Inversão de cores para melhor contraste
+Este script é responsável por gerar e avaliar múltiplas variações de imagens usando o modelo ViT. Suas principais funcionalidades incluem:
 
-### Análise e Comparação
+-   Geração sistemática de variações de imagens combinando:
+    -   Redimensionamento (50% a 150% do tamanho original)
+    -   Rotação (0° a 360° em intervalos de 18°)
+    -   Dilatação (1 a 3 iterações)
+-   Cálculo de similaridade entre embeddings usando cosine similarity
+-   Processamento de imagens individuais com interface interativa
+-   Geração de resultados para cada combinação de transformações
+-   Armazenamento dos resultados em arquivos de texto organizados por jogador
+-   Utilização do modelo ViT (google/vit-base-patch16-224-in21k) para extração de embeddings
+-   Comparação automática com versões Canny das imagens originais
 
--   Geração de tabelas comparativas em HTML
--   Análise estatística dos resultados
--   Visualização de transformações
--   Avaliação de similaridade usando embeddings do ViT
--   Geração de gráficos de análise de robustez
+O script permite selecionar interativamente quais imagens processar e gera resultados detalhados para análise posterior.
 
-### Transformações Aplicadas
+### Análise Estatística e Visualização (teste_estatistico/graphs_all_images.py)
 
--   Redimensionamento: variação de 50% a 150% do tamanho original
--   Rotação: ângulos de 0° a 360° em intervalos de 18°
--   Dilatação: 1 a 3 iterações com kernel 3x3
+Este script realiza uma análise estatística completa dos resultados gerados, criando visualizações e testes estatísticos. Suas principais funcionalidades incluem:
+
+-   Análise estatística detalhada para cada conjunto de dados:
+    -   Cálculo de média, mediana, desvio padrão
+    -   Identificação de valores mínimos e máximos
+    -   Contagem de amostras
+-   Geração de visualizações comparativas:
+    -   Box plots para distribuição dos resultados
+    -   Gráficos de barras para p-valores dos testes estatísticos
+    -   Histogramas para distribuição dos resultados
+-   Realização de testes estatísticos:
+    -   Testes T para comparação entre diferentes conjuntos de dados
+    -   Cálculo de p-valores e significância estatística
+-   Processamento de múltiplos conjuntos de dados:
+    -   Análise de resultados para diferentes imagens (Estrela, Mack, Raposa, etc.)
+    -   Comparação entre diferentes jogadores
+    -   Inclusão de casos base para referência
+-   Armazenamento automático dos resultados:
+    -   Geração de gráficos em alta resolução
+    -   Salvamento em diretório específico para resultados estatísticos
+    -   Formatação clara dos resultados numéricos
+
+O script gera relatórios detalhados tanto em formato visual (gráficos) quanto numérico (estatísticas), facilitando a interpretação dos resultados das transformações.
+
+### Caso Base (teste_estatistico/base_case/base_case.py)
+
+A pasta `base_case` contém os resultados de referência para comparação com as transformações. Suas principais características incluem:
+
+-   Armazenamento de similaridades Canny:
+    -   Resultados de comparação direta com as imagens Canny originais
+    -   Arquivos de texto contendo valores de similaridade para cada imagem
+    -   Formato padronizado para fácil comparação com resultados transformados
+-   Uso como referência estatística:
+    -   Serve como linha de base para avaliação das transformações
+    -   Permite comparar o impacto das transformações em relação ao caso original
+    -   Facilita a identificação de quais transformações mantêm melhor a similaridade
+-   Integração com análise estatística:
+    -   Utilizado nos gráficos de distribuição para comparação visual
+    -   Fornece contexto para interpretação dos resultados das transformações
+    -   Ajuda a estabelecer benchmarks de performance
+
+Esta pasta é fundamental para a análise comparativa do projeto, servindo como ponto de referência para todas as transformações realizadas.
+
+### Análise de Médias e Seleção de Jogadores (lowest_mean.py)
+
+Este script realiza uma análise crucial para a seleção dos jogadores no jogo, identificando as menores médias de similaridade com significância estatística. Suas principais funcionalidades incluem:
+
+-   Análise de resultados por jogador:
+    -   Leitura dos resultados de transformação para cada jogador
+    -   Cálculo da média de similaridade para cada participante
+    -   Contagem do número de valores analisados
+-   Comparação entre jogadores:
+    -   Cálculo das diferenças entre médias de todos os pares de jogadores
+    -   Ordenação das diferenças do menor para o maior
+    -   Identificação dos três pares com menores diferenças
+-   Seleção para o jogo:
+    -   A menor média de similaridade, dos desenhos que obtiveram significância estatística, é selecionada como critério de desempate
+    -   Caso a diferença de similaridade seja menor que o critério encontrado, haverá um empate
+
+Resultados obtidos:
+
+| Jogador   | Média    |
+| --------- | -------- |
+| raposa    | 0.007824 |
+| cavalo    | 0.011552 |
+| estrela   | 0.020191 |
+| linus     | 0.020571 |
+| luminaria | 0.020509 |
+| mack      | 0.024050 |
+| nike      | 0.031801 |
+| gato      | 0.056632 |
+
+Este script é fundamental para a mecânica do jogo, pois determina se haverá empate ou não.
+
+### Estrutura de Pastas de Imagens
+
+O projeto utiliza três pastas principais para gerenciar as imagens:
+
+-   `fotos/`:
+
+    -   Contém as imagens originais dos jogadores
+    -   Imagens em formato PNG ou JPG
+    -   Usadas como referência para todas as transformações
+    -   Base para geração das versões Canny
+
+-   `fotos_canny/`:
+
+    -   Armazena as versões processadas com o algoritmo de Canny
+    -   Geradas automaticamente a partir das imagens originais
+    -   Usadas como referência para comparação de similaridade
+    -   Nomeadas com prefixo "canny\_" para fácil identificação
+
+-   `players/`:
+    -   Organiza as imagens por jogador
+    -   Cada jogador tem sua própria subpasta
+    -   Contém as imagens originais e suas variações
 
 ## 📊 Dependências Principais
 
@@ -93,30 +171,3 @@ uv sync
 -   TorchVision >= 0.22.0
 -   Transformers >= 4.51.3
 -   Jinja2 >= 3.1.6
-
-## 🔧 Uso
-
-1. Coloque as imagens a serem processadas no diretório `fotos/`
-2. Execute o script de transformação Canny:
-
-```bash
-python utils/transform_to_canny.py
-```
-
-3. Execute o script de geração e avaliação de variações:
-
-```bash
-python teste_estatistico/generate_variations_evaluate.py
-```
-
-4. Os resultados serão salvos em `teste_estatistico/transformation_results/`
-5. Analise os gráficos e resultados gerados
-
-## 📝 Notas
-
--   O projeto utiliza o algoritmo de Canny para detecção de bordas
--   As imagens são processadas em escala de cinza
--   O kernel de dilatação usado é 3x3
--   Os resultados incluem visualizações comparativas em HTML
--   A similaridade é calculada usando cosine similarity entre embeddings do modelo ViT
--   Cada imagem gera mais de 1000 variações para análise estatística

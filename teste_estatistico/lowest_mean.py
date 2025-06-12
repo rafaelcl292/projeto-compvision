@@ -26,16 +26,19 @@ for file_name in result_files:
     print(f"Mean: {mean_value:.6f}")
 
 # Calculate differences between all pairs of players
-min_diff = float('inf')
-min_diff_pair = None
-
+diffs = []
 for (player1, mean1), (player2, mean2) in combinations(player_means.items(), 2):
     diff = abs(mean1 - mean2)
-    if diff < min_diff:
-        min_diff = diff
-        min_diff_pair = (player1, player2, mean1, mean2)
+    diffs.append((diff, player1, player2, mean1, mean2))
 
-print(f"\nSmallest difference between players:")
-print(f"Players: {min_diff_pair[0]} and {min_diff_pair[1]}")
-print(f"Means: {min_diff_pair[2]:.6f} and {min_diff_pair[3]:.6f}")
-print(f"Difference: {min_diff:.6f}")
+# Sort by difference
+diffs.sort()
+
+# Print top 3 lowest differences
+print(f"\nTop 3 smallest differences between players:")
+for i in range(min(3, len(diffs))):
+    diff, p1, p2, m1, m2 = diffs[i]
+    print(f"\n#{i + 1}")
+    print(f"Players: {p1} and {p2}")
+    print(f"Means: {m1:.6f} and {m2:.6f}")
+    print(f"Difference: {diff:.6f}")
